@@ -52,15 +52,6 @@
 #include "lc_msgids.h"
 #endif
 
-
-/*
-** Include headers for message IDs here
-*/
-#include "ci_lab_msgids.h"
-#include "to_lab_msgids.h"
-
-#include "sample_app_msgids.h"
-
 /*
 ** SCH Lab schedule table
 ** When populating this table:
