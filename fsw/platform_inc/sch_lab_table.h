@@ -34,15 +34,36 @@
 /*
 ** Defines
 */
-#define SCH_TBL_DEFAULT_FILE "/cf/sch_lab_table.tbl"
+#define SCH_LAB_END_OF_TABLE         0
+#define SCH_LAB_MAX_SCHEDULE_ENTRIES 32
+#define SCH_TBL_DEFAULT_FILE         "/cf/sch_lab_table.tbl"
+
+#define SCH_MAX_MSG_WORDS 32
+
+#ifdef SOFTWARE_BIG_BIT_ORDER 
+#define SCH_PACK_32BIT(value) \
+(uint16)((value & 0xFFFF0000) >> 16), (uint16)(value & 0x0000FFFF) 
+#else 
+#define SCH_PACK_32BIT(value) \
+(uint16)(value & 0x0000FFFF), (uint16)((value & 0xFFFF0000) >> 16)
+#endif
 
 /*
- * The EDS defines the table type name as "SchTbl" so it matches
- * the runtime table name, but the source code refers to the type
- * as SCH_LAB_ScheduleTable_t
- *
- * This discrepancy can be worked around with a typedef for now
- */
-typedef SCH_LAB_SchTbl_t SCH_LAB_ScheduleTable_t;
+** Typedefs
+*/
+typedef struct
+{
+    CFE_SB_MsgId_t    MessageID;                        /* Message ID for the table entry */
+    uint32            PacketRate;                       /* Rate: Send packet every N ticks */
+    CFE_MSG_FcnCode_t FcnCode;                          /* Command/Function code to set */
+    uint16            PayloadLength;                    /* Length of additional command args */
+    uint16            MessageBuffer[SCH_MAX_MSG_WORDS]; /* Command args in 16 bit words */
+} SCH_LAB_ScheduleTableEntry_t;
+
+typedef struct
+{
+    uint32                       TickRate; /* Ticks per second to configure for timer (0=default) */
+    SCH_LAB_ScheduleTableEntry_t Config[SCH_LAB_MAX_SCHEDULE_ENTRIES];
+} SCH_LAB_ScheduleTable_t;
 
 #endif

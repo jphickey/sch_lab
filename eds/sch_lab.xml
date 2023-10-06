@@ -31,11 +31,18 @@
 <PackageFile xmlns="http://www.ccsds.org/schema/sois/seds">
   <Package name="SCH_LAB" shortDescription="Command Ingest">
     <DataTypeSet>
+      <ArrayDataType name="ScheduleArgs" dataTypeRef="BASE_TYPES/uint16" shortDescription="Schedule entry arguments">
+        <DimensionList>
+          <Dimension size="${SCH_LAB/MAX_ARGS_PER_ENTRY}" />
+        </DimensionList>
+      </ArrayDataType>
       <ContainerDataType name="ScheduleTableEntry" shortDescription="SCH_LAB Schedule Table Entry">
         <EntryList>
           <Entry name="MessageID" type="CFE_SB/MsgId" shortDescription="Message ID for the table entry" />
           <Entry name="PacketRate" type="BASE_TYPES/uint32" shortDescription="Send packet every N ticks" />
           <Entry name="FcnCode" type="CFE_HDR/FunctionCode" shortDescription="Command/Function code to set" />
+          <Entry name="PayloadLength" type="BASE_TYPES/uint16" shortDescription="Length of additional command args" />
+          <Entry name="MessageBuffer" type="ScheduleArgs" shortDescription="Additional command args" />
         </EntryList>
       </ContainerDataType>
       <ArrayDataType name="ScheduleTableEntries" dataTypeRef="ScheduleTableEntry" shortDescription="SCH_LAB Schedule Table">
