@@ -27,18 +27,12 @@
 #include <string.h>
 
 #include "cfe.h"
-#include "cfe_sb.h"
-#include "osapi.h"
-#include "cfe_es.h"
-#include "cfe_error.h"
+#include "cfe_msgids.h"
 
 #include "sch_lab_perfids.h"
 #include "sch_lab_version.h"
-
-/*
-** SCH Lab Schedule table from the platform inc directory
-*/
-#include "sch_lab_table.h"
+#include "sch_lab_mission_cfg.h"
+#include "sch_lab_tbl.h"
 
 /*
 ** Global Structure
@@ -46,6 +40,8 @@
 typedef struct
 {
     CFE_MSG_CommandHeader_t CommandHeader;
+    uint16                  MessageBuffer[SCH_LAB_MAX_ARGS_PER_ENTRY];
+    uint16                  PayloadLength;
     uint32                  PacketRate;
     uint32                  Counter;
 } SCH_LAB_StateEntry_t;
@@ -121,6 +117,7 @@ void SCH_Lab_AppMain(void)
             ** Process table every tick, sending packets that are ready
             */
             LocalStateEntry = SCH_LAB_Global.State;
+
             for (i = 0; i < SCH_LAB_MAX_SCHEDULE_ENTRIES; i++)
             {
                 if (LocalStateEntry->PacketRate != 0)
@@ -153,7 +150,7 @@ void SCH_LAB_LocalTimerCallback(osal_id_t object_id, void *arg)
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 int32 SCH_LAB_AppInit(void)
 {
-    int                           i;
+    int                           i, x;
     int32                         Status;
     int32                         OsStatus;
     uint32                        TimerPeriod;
@@ -191,12 +188,12 @@ int32 SCH_LAB_AppInit(void)
     /*
     ** Register tables with cFE and load default data
     */
-    Status = CFE_TBL_Register(&SCH_LAB_Global.TblHandle, "SCH_LAB_SchTbl", sizeof(SCH_LAB_ScheduleTable_t),
+    Status = CFE_TBL_Register(&SCH_LAB_Global.TblHandle, "ScheduleTable", sizeof(SCH_LAB_ScheduleTable_t),
                               CFE_TBL_OPT_DEFAULT, NULL);
 
     if (Status != CFE_SUCCESS)
     {
-        CFE_ES_WriteToSysLog("SCH_LAB: Error Registering SCH_LAB_SchTbl, RC = 0x%08lX\n", (unsigned long)Status);
+        CFE_ES_WriteToSysLog("SCH_LAB: Error Registering ScheduleTable, RC = 0x%08lX\n", (unsigned long)Status);
 
         return Status;
     }
@@ -208,7 +205,7 @@ int32 SCH_LAB_AppInit(void)
         Status = CFE_TBL_Load(SCH_LAB_Global.TblHandle, CFE_TBL_SRC_FILE, SCH_TBL_DEFAULT_FILE);
         if (Status != CFE_SUCCESS)
         {
-            CFE_ES_WriteToSysLog("SCH_LAB: Error Loading Table SCH_LAB_SchTbl, RC = 0x%08lX\n", (unsigned long)Status);
+            CFE_ES_WriteToSysLog("SCH_LAB: Error Loading Table ScheduleTable, RC = 0x%08lX\n", (unsigned long)Status);
             CFE_TBL_ReleaseAddress(SCH_LAB_Global.TblHandle);
 
             return Status;
@@ -221,7 +218,7 @@ int32 SCH_LAB_AppInit(void)
     Status = CFE_TBL_GetAddress(&TableAddr, SCH_LAB_Global.TblHandle);
     if (Status != CFE_SUCCESS && Status != CFE_TBL_INFO_UPDATED)
     {
-        CFE_ES_WriteToSysLog("SCH_LAB: Error Getting Table's Address SCH_LAB_SchTbl, RC = 0x%08lX\n",
+        CFE_ES_WriteToSysLog("SCH_LAB: Error Getting Table's Address ScheduleTable, RC = 0x%08lX\n",
                              (unsigned long)Status);
 
         return Status;
@@ -233,14 +230,24 @@ int32 SCH_LAB_AppInit(void)
     ConfigTable     = TableAddr;
     ConfigEntry     = ConfigTable->Config;
     LocalStateEntry = SCH_LAB_Global.State;
+
+    /* Populate the CCSDS message and move the message content into the proper user data space. */
     for (i = 0; i < SCH_LAB_MAX_SCHEDULE_ENTRIES; i++)
     {
         if (ConfigEntry->PacketRate != 0)
         {
+            /* Initialize the message with the length of the header + payload */
             CFE_MSG_Init(CFE_MSG_PTR(LocalStateEntry->CommandHeader), ConfigEntry->MessageID,
-                         sizeof(LocalStateEntry->CommandHeader));
+                         sizeof(LocalStateEntry->CommandHeader) + ConfigEntry->PayloadLength);
             CFE_MSG_SetFcnCode(CFE_MSG_PTR(LocalStateEntry->CommandHeader), ConfigEntry->FcnCode);
-            LocalStateEntry->PacketRate = ConfigEntry->PacketRate;
+
+            LocalStateEntry->PacketRate    = ConfigEntry->PacketRate;
+            LocalStateEntry->PayloadLength = ConfigEntry->PayloadLength;
+
+            for (x = 0; x < SCH_LAB_MAX_ARGS_PER_ENTRY; x++)
+            {
+                LocalStateEntry->MessageBuffer[x] = ConfigEntry->MessageBuffer[x];
+            }
         }
         ++ConfigEntry;
         ++LocalStateEntry;
@@ -268,7 +275,7 @@ int32 SCH_LAB_AppInit(void)
     Status = CFE_TBL_ReleaseAddress(SCH_LAB_Global.TblHandle);
     if (Status != CFE_SUCCESS)
     {
-        CFE_ES_WriteToSysLog("SCH_LAB: Error Releasing Table SCH_LAB_SchTbl, RC = 0x%08lX\n", (unsigned long)Status);
+        CFE_ES_WriteToSysLog("SCH_LAB: Error Releasing Table ScheduleTable, RC = 0x%08lX\n", (unsigned long)Status);
     }
 
     /* Create pipe and subscribe to the 1Hz pkt */

@@ -18,31 +18,32 @@
 
 /**
  * @file
- *  This file contains the schedule tables for the SCH Lab app.
- *  It is intended to go in the platform include directory so the SCH_LAB
- *  app source code does not have to be modified.
+ *   Specification for the CFS SCH_LAB table related data structures and
+ *   constant definitions.
+ *
+ * The structure definitions in this file are closely related to the implementation
+ * of the application.  Any modification to these structures will likely need
+ * a correpsonding update to the source code.
  */
-#ifndef SCH_LAB_TABLE_H
-#define SCH_LAB_TABLE_H
+#ifndef SCH_LAB_TBLDEFS_H
+#define SCH_LAB_TBLDEFS_H
 
 #include "cfe_sb_extern_typedefs.h" /* for CFE_SB_MsgId_t */
 #include "cfe_msg_api_typedefs.h"   /* For CFE_MSG_FcnCode_t */
 #include "cfe_msgids.h"
 
-#include "sch_lab_eds_typedefs.h"
+#include "sch_lab_mission_cfg.h"
 
 /*
-** Defines
+** Typedefs
 */
-#define SCH_TBL_DEFAULT_FILE "/cf/sch_lab_table.tbl"
-
-/*
- * The EDS defines the table type name as "SchTbl" so it matches
- * the runtime table name, but the source code refers to the type
- * as SCH_LAB_ScheduleTable_t
- *
- * This discrepancy can be worked around with a typedef for now
- */
-typedef SCH_LAB_SchTbl_t SCH_LAB_ScheduleTable_t;
+typedef struct
+{
+    CFE_SB_MsgId_t    MessageID;                                 /* Message ID for the table entry */
+    uint32            PacketRate;                                /* Rate: Send packet every N ticks */
+    CFE_MSG_FcnCode_t FcnCode;                                   /* Command/Function code to set */
+    uint16            PayloadLength;                             /* Length of additional command args */
+    uint16            MessageBuffer[SCH_LAB_MAX_ARGS_PER_ENTRY]; /* Command args in 16 bit words */
+} SCH_LAB_ScheduleTableEntry_t;
 
 #endif
