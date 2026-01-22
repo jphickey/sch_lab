@@ -23,8 +23,8 @@
  * These ID values need to be unique across a CFS deployment, so they may be customized
  * as needed to avoid collision with other apps.
  */
-#ifndef SCH_LAB_PERFIDS_H
-#define SCH_LAB_PERFIDS_H
+#ifndef DEFAULT_SCH_LAB_PERFIDS_H
+#define DEFAULT_SCH_LAB_PERFIDS_H
 
 #define SCH_LAB_MAIN_TASK_PERF_ID 36
 

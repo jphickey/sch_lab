@@ -18,16 +18,21 @@
 
 /**
  * @file
- *   Specification for the SCH_LAB table structures
+ *   SCH_LAB Application Public Definitions
  *
- * @note
- *   Constants and enumerated types related to these table structures
- *   are defined in sch_lab_tbldefs.h.
+ * This provides default values for configurable items that affect
+ * the interface(s) of this module.  This includes the CMD/TLM message
+ * interface, tables definitions, and any other data products that
+ * serve to exchange information with other entities.
+ *
+ * @note This file may be overridden/superceded by mission-provided definitions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
  */
-#ifndef DEFAULT_SCH_LAB_TBL_H
-#define DEFAULT_SCH_LAB_TBL_H
+#ifndef DEFAULT_SCH_LAB_INTERFACE_CFG_VALUES_H
+#define DEFAULT_SCH_LAB_INTERFACE_CFG_VALUES_H
 
-#include "sch_lab_tbldefs.h"
-#include "sch_lab_tblstruct.h"
+/* Use the default configuration value for all */
+#define SCH_LAB_MISSION_CFGVAL(x) DEFAULT_SCH_LAB_MISSION_##x
 
 #endif

@@ -25,8 +25,8 @@
  * of the application.  Any modification to these structures will likely need
  * a correpsonding update to the source code.
  */
-#ifndef SCH_LAB_TBLDEFS_H
-#define SCH_LAB_TBLDEFS_H
+#ifndef DEFAULT_SCH_LAB_TBLDEFS_H
+#define DEFAULT_SCH_LAB_TBLDEFS_H
 
 #include "cfe_sb_extern_typedefs.h" /* for CFE_SB_MsgId_t */
 #include "cfe_msg_api_typedefs.h"   /* For CFE_MSG_FcnCode_t */
@@ -35,15 +35,24 @@
 #include "sch_lab_mission_cfg.h"
 
 /*
+** Defines
+*/
+#ifdef SOFTWARE_BIG_BIT_ORDER
+#define SCH_PACK_32BIT(value) (uint16)((value & 0xFFFF0000) >> 16), (uint16)(value & 0x0000FFFF)
+#else
+#define SCH_PACK_32BIT(value) (uint16)(value & 0x0000FFFF), (uint16)((value & 0xFFFF0000) >> 16)
+#endif
+
+/*
 ** Typedefs
 */
 typedef struct
 {
-    CFE_SB_MsgId_t    MessageID;                                 /* Message ID for the table entry */
-    uint32            PacketRate;                                /* Rate: Send packet every N ticks */
-    CFE_MSG_FcnCode_t FcnCode;                                   /* Command/Function code to set */
-    uint16            PayloadLength;                             /* Length of additional command args */
-    uint16            MessageBuffer[SCH_LAB_MAX_ARGS_PER_ENTRY]; /* Command args in 16 bit words */
+    CFE_SB_MsgId_t    MessageID;                                         /* Message ID for the table entry */
+    uint32            PacketRate;                                        /* Rate: Send packet every N ticks */
+    CFE_MSG_FcnCode_t FcnCode;                                           /* Command/Function code to set */
+    uint16            PayloadLength;                                     /* Length of additional command args */
+    uint16            MessageBuffer[SCH_LAB_MISSION_MAX_ARGS_PER_ENTRY]; /* Command args in 16 bit words */
 } SCH_LAB_ScheduleTableEntry_t;
 
 #endif

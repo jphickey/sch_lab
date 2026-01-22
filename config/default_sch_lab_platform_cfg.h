@@ -18,16 +18,20 @@
 
 /**
  * @file
- *   Specification for the SCH_LAB table structures
  *
- * @note
- *   Constants and enumerated types related to these table structures
- *   are defined in sch_lab_tbldefs.h.
+ * CFS SCH_LAB Application Mission Configuration Header File
+ *
+ * This is a compatibility header for the "mission_cfg.h" file that has
+ * traditionally provided public config definitions for each CFS app.
+ *
+ * @note This file may be overridden/superceded by mission-provided definitions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
  */
-#ifndef DEFAULT_SCH_LAB_TBL_H
-#define DEFAULT_SCH_LAB_TBL_H
+#ifndef DEFAULT_SCH_LAB_PLATFORM_CFG_H
+#define DEFAULT_SCH_LAB_PLATFORM_CFG_H
 
-#include "sch_lab_tbldefs.h"
-#include "sch_lab_tblstruct.h"
+#include "sch_lab_mission_cfg.h"
+#include "sch_lab_internal_cfg.h"
 
-#endif
+#endif /* DEFAULT_SCH_LAB_PLATFORM_CFG_H */
