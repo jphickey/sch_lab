@@ -1,7 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2020 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -33,6 +33,7 @@
 #include "sch_lab_perfids.h"
 #include "sch_lab_version.h"
 #include "sch_lab_mission_cfg.h"
+#include "sch_lab_platform_cfg.h"
 #include "sch_lab_tbl.h"
 
 /*
@@ -41,7 +42,7 @@
 typedef struct
 {
     CFE_MSG_CommandHeader_t CommandHeader;
-    uint16                  MessageBuffer[SCH_LAB_MAX_ARGS_PER_ENTRY];
+    uint16                  MessageBuffer[SCH_LAB_MISSION_MAX_ARGS_PER_ENTRY];
     uint16                  PayloadLength;
     uint32                  PacketRate;
     uint32                  Counter;
@@ -49,7 +50,7 @@ typedef struct
 
 typedef struct
 {
-    SCH_LAB_StateEntry_t State[SCH_LAB_MAX_SCHEDULE_ENTRIES];
+    SCH_LAB_StateEntry_t State[SCH_LAB_MISSION_MAX_SCHEDULE_ENTRIES];
     osal_id_t            TimerId;
     osal_id_t            TimingSem;
     CFE_TBL_Handle_t     TblHandle;
@@ -119,7 +120,7 @@ void SCH_LAB_AppMain(void)
             */
             LocalStateEntry = SCH_LAB_Global.State;
 
-            for (i = 0; i < SCH_LAB_MAX_SCHEDULE_ENTRIES; i++)
+            for (i = 0; i < SCH_LAB_MISSION_MAX_SCHEDULE_ENTRIES; i++)
             {
                 if (LocalStateEntry->PacketRate != 0)
                 {
@@ -190,7 +191,7 @@ CFE_Status_t SCH_LAB_AppInit(void)
     /*
     ** Register tables with cFE and load default data
     */
-    Status = CFE_TBL_Register(&SCH_LAB_Global.TblHandle, "ScheduleTable", sizeof(SCH_LAB_ScheduleTable_t),
+    Status = CFE_TBL_Register(&SCH_LAB_Global.TblHandle, "Schedule", sizeof(SCH_LAB_ScheduleTable_t),
                               CFE_TBL_OPT_DEFAULT, NULL);
 
     if (Status != CFE_SUCCESS)
@@ -204,7 +205,7 @@ CFE_Status_t SCH_LAB_AppInit(void)
         /*
         ** Loading Table
         */
-        Status = CFE_TBL_Load(SCH_LAB_Global.TblHandle, CFE_TBL_SRC_FILE, SCH_LAB_TBL_DEFAULT_FILE);
+        Status = CFE_TBL_Load(SCH_LAB_Global.TblHandle, CFE_TBL_SRC_FILE, SCH_LAB_PLATFORM_TBL_DEFAULT_FILE);
         if (Status != CFE_SUCCESS)
         {
             CFE_ES_WriteToSysLog("SCH_LAB: Error Loading Table ScheduleTable, RC = 0x%08lX\n", (unsigned long)Status);
@@ -234,7 +235,7 @@ CFE_Status_t SCH_LAB_AppInit(void)
     LocalStateEntry = SCH_LAB_Global.State;
 
     /* Populate the CCSDS message and move the message content into the proper user data space. */
-    for (i = 0; i < SCH_LAB_MAX_SCHEDULE_ENTRIES; i++)
+    for (i = 0; i < SCH_LAB_MISSION_MAX_SCHEDULE_ENTRIES; i++)
     {
         if (ConfigEntry->PacketRate != 0)
         {
@@ -246,7 +247,7 @@ CFE_Status_t SCH_LAB_AppInit(void)
             LocalStateEntry->PacketRate    = ConfigEntry->PacketRate;
             LocalStateEntry->PayloadLength = ConfigEntry->PayloadLength;
 
-            for (x = 0; x < SCH_LAB_MAX_ARGS_PER_ENTRY; x++)
+            for (x = 0; x < SCH_LAB_MISSION_MAX_ARGS_PER_ENTRY; x++)
             {
                 LocalStateEntry->MessageBuffer[x] = ConfigEntry->MessageBuffer[x];
             }
@@ -300,8 +301,8 @@ CFE_Status_t SCH_LAB_AppInit(void)
         CFE_ES_WriteToSysLog("%s: OS_TimerSet failed:RC=%ld\n", __func__, (long)OsStatus);
     }
 
-    CFE_Config_GetVersionString(VersionString, SCH_LAB_CFG_MAX_VERSION_STR_LEN, "SCH Lab",
-                          SCH_LAB_VERSION, SCH_LAB_BUILD_CODENAME, SCH_LAB_LAST_OFFICIAL);
+    CFE_Config_GetVersionString(VersionString, SCH_LAB_CFG_MAX_VERSION_STR_LEN, "SCH Lab", SCH_LAB_VERSION,
+                                SCH_LAB_BUILD_CODENAME, SCH_LAB_LAST_OFFICIAL);
 
     OS_printf("SCH Lab Initialized.%s\n", VersionString);
 

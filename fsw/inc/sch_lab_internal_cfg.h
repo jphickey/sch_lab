@@ -18,24 +18,27 @@
 
 /**
  * @file
- *   Specification for the CFS SCH_LAB table encapsulation structures
  *
- * Provides default definitions for SCH_LAB table structures
+ * CFS SCH_LAB Application Mission Configuration Header File
+ *
+ * This is a compatibility header for the "mission_cfg.h" file that has
+ * traditionally provided public config definitions for each CFS app.
  *
  * @note This file may be overridden/superceded by mission-provided definitions
  * either by overriding this header or by generating definitions from a command/data
  * dictionary tool.
  */
-#ifndef DEFAULT_SCH_LAB_TBLSTRUCT_H
-#define DEFAULT_SCH_LAB_TBLSTRUCT_H
+#ifndef SCH_LAB_INTERNAL_CFG_H
+#define SCH_LAB_INTERNAL_CFG_H
 
 #include "sch_lab_mission_cfg.h"
-#include "sch_lab_tbldefs.h"
+#include "sch_lab_internal_cfg_values.h"
 
-typedef struct
-{
-    uint32                       TickRate; /* Ticks per second to configure for timer (0=default) */
-    SCH_LAB_ScheduleTableEntry_t Config[SCH_LAB_MISSION_MAX_SCHEDULE_ENTRIES];
-} SCH_LAB_ScheduleTable_t;
+/*
+ * There is no extra encapsulation here, this header only
+ * defines the default file name to use for the SCH table
+ */
+#define SCH_LAB_PLATFORM_TBL_DEFAULT_FILE         SCH_LAB_PLATFORM_CFGVAL(TBL_DEFAULT_FILE)
+#define DEFAULT_SCH_LAB_PLATFORM_TBL_DEFAULT_FILE "/cf/sch_lab_table.tbl"
 
-#endif
+#endif /* SCH_LAB_INTERFACE_CFG_H */

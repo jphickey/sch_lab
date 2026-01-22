@@ -1,7 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2020 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -18,29 +18,21 @@
 
 /**
  * @file
+ *   SCH_LAB Application Public Definitions
  *
- * CFS SCH_LAB Application Mission Configuration Header File
+ * This provides default values for configurable items that affect
+ * the interface(s) of this module.  This includes the CMD/TLM message
+ * interface, tables definitions, and any other data products that
+ * serve to exchange information with other entities.
  *
- * This is a compatibility header for the "mission_cfg.h" file that has
- * traditionally provided public config definitions for each CFS app.
- *
- * @note This file may be overridden/superceded by mission-provided defintions
+ * @note This file may be overridden/superceded by mission-provided definitions
  * either by overriding this header or by generating definitions from a command/data
  * dictionary tool.
  */
-#ifndef SCH_LAB_INTERFACE_CFG_H
-#define SCH_LAB_INTERFACE_CFG_H
+#ifndef DEFAULT_SCH_LAB_INTERFACE_CFG_VALUES_H
+#define DEFAULT_SCH_LAB_INTERFACE_CFG_VALUES_H
 
-/**
- * @brief The maximum number of schedule table entries
- */
-#define SCH_LAB_MAX_SCHEDULE_ENTRIES 32
+/* Use the default configuration value for all */
+#define SCH_LAB_MISSION_CFGVAL(x) DEFAULT_SCH_LAB_MISSION_##x
 
-/**
- * @brief The maximum number of arguments to each schedule message entry
- *
- * This is allocated in units of 16 bit words.
- */
-#define SCH_LAB_MAX_ARGS_PER_ENTRY 32
-
-#endif /* SCH_LAB_INTERFACE_CFG_H */
+#endif

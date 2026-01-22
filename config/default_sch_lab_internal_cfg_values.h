@@ -18,24 +18,21 @@
 
 /**
  * @file
- *   Specification for the CFS SCH_LAB table encapsulation structures
+ *   SCH_LAB Application Private Config Definitions
  *
- * Provides default definitions for SCH_LAB table structures
+ * This provides default values for configurable items that are internal
+ * to this module and do NOT affect the interface(s) of this module.  Changes
+ * to items in this file only affect the local module and will be transparent
+ * to external entities that are using the public interface(s).
  *
  * @note This file may be overridden/superceded by mission-provided definitions
  * either by overriding this header or by generating definitions from a command/data
  * dictionary tool.
  */
-#ifndef DEFAULT_SCH_LAB_TBLSTRUCT_H
-#define DEFAULT_SCH_LAB_TBLSTRUCT_H
+#ifndef DEFAULT_SCH_LAB_INTERNAL_CFG_VALUES_H
+#define DEFAULT_SCH_LAB_INTERNAL_CFG_VALUES_H
 
-#include "sch_lab_mission_cfg.h"
-#include "sch_lab_tbldefs.h"
-
-typedef struct
-{
-    uint32                       TickRate; /* Ticks per second to configure for timer (0=default) */
-    SCH_LAB_ScheduleTableEntry_t Config[SCH_LAB_MISSION_MAX_SCHEDULE_ENTRIES];
-} SCH_LAB_ScheduleTable_t;
+/* Use the default configuration value for all */
+#define SCH_LAB_PLATFORM_CFGVAL(x) DEFAULT_SCH_LAB_PLATFORM_##x
 
 #endif

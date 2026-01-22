@@ -1,7 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2020 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -24,25 +24,10 @@
  *   Constants and enumerated types related to these table structures
  *   are defined in sch_lab_tbldefs.h.
  */
-#ifndef SCH_LAB_TBL_H
-#define SCH_LAB_TBL_H
+#ifndef DEFAULT_SCH_LAB_TBL_H
+#define DEFAULT_SCH_LAB_TBL_H
 
 #include "sch_lab_tbldefs.h"
 #include "sch_lab_tblstruct.h"
-
-/*
-** Defines
-*/
-#ifdef SOFTWARE_BIG_BIT_ORDER
-#define SCH_PACK_32BIT(value) (uint16)((value & 0xFFFF0000) >> 16), (uint16)(value & 0x0000FFFF)
-#else
-#define SCH_PACK_32BIT(value) (uint16)(value & 0x0000FFFF), (uint16)((value & 0xFFFF0000) >> 16)
-#endif
-
-/*
- * There is no extra encapsulation here, this header only
- * defines the default file name to use for the SCH table
- */
-#define SCH_LAB_TBL_DEFAULT_FILE "/cf/sch_lab_table.tbl"
 
 #endif

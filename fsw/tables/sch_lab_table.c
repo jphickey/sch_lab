@@ -1,7 +1,7 @@
 /************************************************************************
- * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ * NASA Docket No. GSC-19,200-1, and identified as "cFS Draco"
  *
- * Copyright (c) 2020 United States Government as represented by the
+ * Copyright (c) 2023 United States Government as represented by the
  * Administrator of the National Aeronautics and Space Administration.
  * All Rights Reserved.
  *
@@ -23,85 +23,34 @@
 /* This is for the standard set of CFE core app MsgID values */
 #include "cfe_msgids.h"
 
-#ifdef HAVE_CI_LAB
-#include "ci_lab_msgids.h"
-#endif
-
-#ifdef HAVE_TO_LAB
-#include "to_lab_msgids.h"
-#endif
-
-#ifdef HAVE_SAMPLE_APP
-#include "sample_app_msgids.h"
-#endif
-
-#ifdef HAVE_HS
-#include "hs_msgids.h"
-#endif
-
-#ifdef HAVE_FM
-#include "fm_msgids.h"
-#endif
-
-#ifdef HAVE_SC
-#include "sc_msgids.h"
-#endif
-
-#ifdef HAVE_DS
-#include "ds_msgids.h"
-#endif
-
-#ifdef HAVE_LC
-#include "lc_msgids.h"
-#endif
-
 /*
 ** SCH Lab schedule table
 ** When populating this table:
-**  1. The entire table is processed (SCH_LAB_MAX_SCHEDULE_ENTRIES) but entries with a
+**  1. The entire table is processed (SCH_LAB_MISSION_MAX_SCHEDULE_ENTRIES) but entries with a
 **     packet rate of 0 are skipped
 **  2. You can have commented out entries or entries with a packet rate of 0
-**  3. If the table grows too big, increase SCH_LAB_MAX_SCHEDULE_ENTRIES
+**  3. If the table grows too big, increase SCH_LAB_MISSION_MAX_SCHEDULE_ENTRIES
 */
 
-SCH_LAB_ScheduleTable_t SCH_LAB_ScheduleTable = {
+SCH_LAB_ScheduleTable_t Schedule = {
     .TickRate = 100,
     .Config   = {
-        {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_SEND_HK_MID), 100, 0}, /* Example of a 1hz packet */
+        /*
+        ** This is an empty default table.
+        ** Projects should override this default table with their own configurations.
+        ** Examples of cFE HK packet requests are shown in the comment below.
+        */
+        {CFE_SB_MSGID_RESERVED, 0, 0},
+        /*
+        ** Example of a cFE HK packet requests
+        {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_SEND_HK_MID), 100, 0},
         {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_SEND_HK_MID), 50, 0},
         {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_SEND_HK_MID), 98, 0},
         {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_SEND_HK_MID), 97, 0},
         {CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_SEND_HK_MID), 96, 0},
-
-/* Example of including additional open source apps  */
-#ifdef HAVE_CI_LAB
-        {CFE_SB_MSGID_WRAP_VALUE(CI_LAB_SEND_HK_MID), 95, 0},
-#endif
-#ifdef HAVE_TO_LAB
-        {CFE_SB_MSGID_WRAP_VALUE(TO_LAB_SEND_HK_MID), 94, 0},
-#endif
-#ifdef HAVE_SAMPLE_APP
-        {CFE_SB_MSGID_WRAP_VALUE(SAMPLE_APP_SEND_HK_MID), 93, 0},
-#endif
-#ifdef HAVE_SC
-        {CFE_SB_MSGID_WRAP_VALUE(SC_SEND_HK_MID), 92, 0},
-        {CFE_SB_MSGID_WRAP_VALUE(SC_ONEHZ_WAKEUP_MID), 91, 0},
-#endif
-#ifdef HAVE_HS
-        {CFE_SB_MSGID_WRAP_VALUE(HS_SEND_HK_MID), 90, 0}, /* Example of a message that wouldn't be sent */
-#endif
-#ifdef HAVE_FM
-        {CFE_SB_MSGID_WRAP_VALUE(FM_SEND_HK_MID), 101, 0},
-#endif
-#ifdef HAVE_DS
-        {CFE_SB_MSGID_WRAP_VALUE(DS_SEND_HK_MID), 102, 0},
-#endif
-#ifdef HAVE_LC
-        {CFE_SB_MSGID_WRAP_VALUE(LC_SEND_HK_MID), 103, 0},
-        {CFE_SB_MSGID_WRAP_VALUE(LC_SAMPLE_AP_MID), 500, 0, 8, {0, 175, 1}},
-#endif
-
-    }};
+        */
+    }
+};
 
 /*
 ** The macro below identifies:
@@ -110,4 +59,4 @@ SCH_LAB_ScheduleTable_t SCH_LAB_ScheduleTable = {
 **    3) a brief description of the contents of the file image
 **    4) the desired name of the table image binary file that is cFE compatible
 */
-CFE_TBL_FILEDEF(SCH_LAB_ScheduleTable, SCH_LAB_APP.ScheduleTable, Schedule Lab MsgID Table, sch_lab_table.tbl)
+CFE_TBL_FILEDEF(Schedule, SCH_LAB.Schedule, Schedule Lab MsgID Table, sch_lab_table.tbl)

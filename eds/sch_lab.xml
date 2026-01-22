@@ -57,5 +57,16 @@
         </EntryList>
       </ContainerDataType>
     </DataTypeSet>
+    <ComponentSet>
+      <Component name="Application">
+        <RequiredInterfaceSet>
+          <Interface name="Schedule" shortDescription="Scheduler Table" type="CFE_TBL/Table">
+            <GenericTypeMapSet>
+              <GenericTypeMap name="TableDataType" type="ScheduleTable" />
+            </GenericTypeMapSet>
+          </Interface>
+        </RequiredInterfaceSet>
+      </Component>
+    </ComponentSet>
   </Package>
 </PackageFile>
